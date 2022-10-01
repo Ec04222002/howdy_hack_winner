@@ -8,6 +8,7 @@ window.onload = () => {
     let searchBox = doc.querySelector(".search-box");
     let main = doc.getElementsByTagName('main')[0]
     main.addEventListener('click', (e)=>{
+        log("click")
         searchBox.classList.remove('border-searching')
         e.stopPropagation()
     })
@@ -27,8 +28,23 @@ window.onload = () => {
         }
     })
     
+    let form = doc.querySelector('.search-form')
+    let sightseeingPopup = doc.querySelector('.sight-popup')
+    form.onsubmit = (e)=>{
+        sightseeingPopup.classList.add("show")
+        main.classList.add("popup-showing");
+        e.preventDefault();
+        
+    }
+
+    goIcon.addEventListener("click", (e)=>{
+        
+    })
+
+
 
 
 };
+
 
 
