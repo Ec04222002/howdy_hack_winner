@@ -1,3 +1,8 @@
+:root{
+    --main-bg-color: rgba(154,57,163,1);
+}
+
+
 * {
     margin: 0;
     padding: 0;
@@ -5,6 +10,8 @@
     color: #fff;
     
 }
+
+
   body{
     font-family: 'Poppins', sans-serif;
     overflow: hidden;
@@ -31,7 +38,7 @@
     padding: 0 26px;
     width: 100vw;
     height: 100vh;
-    background: rgba(154,57,163,1);
+    background: var(--main-bg-color);
     background: -moz-linear-gradient(-45deg, rgba(154,57,163,1) 0%, rgba(65,103,168,1) 100%);
     background: -webkit-linear-gradient(-45deg, rgba(154,57,163,1) 0%, rgba(65,103,168,1) 100%);
     background: -o-linear-gradient(-45deg, rgba(154,57,163,1) 0%, rgba(65,103,168,1) 100%);
@@ -43,7 +50,8 @@
 
   main.popup-showing{
     pointer-events: none;
-    filter: brightness(35%);
+    filter: brightness(35%) blur(5px);
+    
   }
   h1 {
     display: block;
@@ -192,7 +200,8 @@ button{
   outline: none;
   border: none;
   color: #fff;
-  background-color: transparent
+  background-color: transparent;
+  cursor : pointer;
 }
 
 .sight-popup{
@@ -202,47 +211,92 @@ button{
     top: -50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    transition: top .5s ease-in-out; 
+    transition: all .5s ease-in-out; 
+    
+}
+
+.sight-popup > h1{
+    min-width: 300px;
 }
 .sight-popup.show{
     visibility: visible;
     z-index: 200;
     top: 50%;
-
 }
 
 .slider{
+    margin:auto;
 display: grid;
-grid-auto-flow: column;
-grid-auto-columns: 25%;
-gap: var(--size-3);
-overflow-x: auto;
+width: 90vw;
+min-width: 300px;
+grid-template-columns: auto auto auto;
+  place-items: center;
+  column-gap: 10px;
+  row-gap: 5px;
 }
+
+
 ::-webkit-scrollbar {
    display: none;
 }
-.slider .card{
-    border-radius: 10px;
-    width: 500px;
-margin: 0 10px;
-background: #fff;
-box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-}
+
 .slider .card .img{
-height: 200px;
-width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+    width: 100%;
+    height: 280px;
+    width: 280px;
+border-radius: 50%;
+background-color: var(--main-bg-color);
 }
+
+.slider .card .img button{
+    pointer-events: none;
+   z-index: 100;
+    opacity: 0;
+    position: absolute;
+    border-radius: 10px;
+    padding: 6px;
+    background-color: var(--main-bg-color);
+    color: #fff;
+}
+
+
+
 .slider .card .img img{
-padding: 10px;
-height: 100%;
-width: 100%;
+    cursor: pointer;
+border-radius: 50%;
+height: 270px;
+width: 270px;
 object-fit: cover;
 }
+
+
+.sightsee-hover-anime{
+    filter: brightness(50%) blur(1px);
+}
+
+.navBtns{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top: 45px;
+}
+
+.navBtns i{
+    font-size: 50px;
+    padding: 0px 40px;
+}
+.navBtns :nth-child(1) i{
+    font-size: 60px;
+}
 .slider .card .content{
-padding: 10px 20px;
+    text-align: center;
+
 }
 .slider .card .content .title{
-color:black;
+color:#fff;
 font-size: 25px;
 font-weight: 600;
 }
@@ -257,18 +311,17 @@ color:black;
 text-align: justify;
 margin: 10px 0;
 }
-.card .content .btn{
+/* .card .content .btn{
 display: block;
 text-align: left;
 margin: 10px 0;
-}
+} */
 .card .content .btn button{
-background: #e74c3c;
+background: transparent;
 color: #fff;
 border: none;
 outline: none;
-font-size: 17px;
-padding: 5px 8px;
+font-size: 35px;
 border-radius: 5px;
 cursor: pointer;
 transition: 0.2s;

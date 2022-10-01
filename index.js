@@ -1,5 +1,4 @@
 log = console.log
-print = console.log
 doc = document
 
 
@@ -38,12 +37,31 @@ window.onload = () => {
     }
 
     goIcon.addEventListener("click", (e)=>{
-        
+        sightseeingPopup.classList.add("show")
+        main.classList.add("popup-showing");  
     })
 
+    let sightseeImgs = doc.querySelectorAll(".card .img img")
+    
+    for(let i = 0; i < sightseeImgs.length; i++){
+        let ele = sightseeImgs[i]
+        ele.addEventListener('mouseover', (e)=>{
+            e.target.classList.add("sightsee-hover-anime");
+            e.target.previousElementSibling.style.opacity = 1;
+        })
+        ele.addEventListener('mouseleave', (e)=>{
+            e.target.classList.remove("sightsee-hover-anime");
+            e.target.previousElementSibling.style.opacity = 0;
+        })
+        ele.addEventListener('click', (e)=>{})
+    }
 
-
-
+    let backBtn = doc.querySelector("#backBtn");
+    backBtn.onclick = (e)=>{
+        sightseeingPopup.classList.remove("show");
+        main.classList.remove("popup-showing");
+    }
+    
 };
 
 
