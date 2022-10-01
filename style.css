@@ -178,7 +178,7 @@ position: absolute;
   #search::-moz-selection {color: #FFFFFF; background: rgba(0,0,0,0.25);}
   #search::selection {color: #FFFFFF; background: rgba(0,0,0,0.25);}
   
-}
+
 body{
   font-family: 'Poppins', sans-serif;
 }
@@ -361,27 +361,24 @@ button{
   background-color: transparent
 }
 
-/*card */  
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
-*{
-margin: 0;
-padding: 0;
-box-sizing: border-box;
-font-family: 'Poppins', sans-serif;
-}
-html,body{
-display: grid;
-height: 100%;
-place-items: center;
-text-align: center;
-background: #f2f2f2;
+.popup{
+    position: absolute;
+    z-index: 1;
+    width: 100vw;
+    height:100vh;
+    outline: solid green;
+    display: flex;
+    justify-content: center;
+    align-items: center
 }
 .slider{
-max-width: 1100px;
+width: 100vw;
 display: flex;
+justify-content: center;
+align-items: center;
 }
 .slider .card{
-flex: 1;
+    width: 500px;
 margin: 0 10px;
 background: #fff;
 }
