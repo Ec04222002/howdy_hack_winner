@@ -212,10 +212,14 @@ button{
 }
 
 .slider{
-width: 100vw;
-display: flex;
-justify-content: center;
-align-items: center;
+display: grid;
+grid-auto-flow: column;
+grid-auto-columns: 25%;
+gap: var(--size-3);
+overflow-x: auto;
+}
+::-webkit-scrollbar {
+   display: none;
 }
 .slider .card{
     border-radius: 10px;
@@ -237,17 +241,19 @@ object-fit: cover;
 .slider .card .content{
 padding: 10px 20px;
 }
-.card .content .title{
+.slider .card .content .title{
+color:black;
 font-size: 25px;
 font-weight: 600;
 }
-.card .content .sub-title{
+.slider .card .content .sub-title{
 font-size: 20px;
 font-weight: 600;
 color: #e74c3c;
 line-height: 20px;
 }
 .card .content p{
+color:black;
 text-align: justify;
 margin: 10px 0;
 }
