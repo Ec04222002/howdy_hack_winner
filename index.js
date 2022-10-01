@@ -20,6 +20,7 @@ window.onload = () => {
   //  getPoints(100,100);
     getLocations(41.397158,2.160873,1, 'SIGHTS');
     getImageFromLoc('Empire State Building');
+    getPlaceDescription('');    
 };
 
 async function getPoints(latitude, longitude) {
@@ -35,10 +36,7 @@ response = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', 
 
     response = await response.json();
     let token = response['access_token'];
-    
-    log(token);
-
-    
+        
     let url = `https://test.api.amadeus.com/v1/location/analytics/category-rated-areas?latitude=${latitude}&longitude=${longitude}`;
 
     let response2 = await fetch(url, {
@@ -49,7 +47,6 @@ response = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', 
     });
 
     response2 = await response2.json();
-    log(response2);
 }
 
 async function getLocations(latitude, longitude, radius, category) {
@@ -76,17 +73,16 @@ async function getLocations(latitude, longitude, radius, category) {
     });
 
     response2 = await response2.json();
-    log(response2);
-
 }
 
 async function getImageFromLoc(place) {
-    log('yo1');
     let response = await fetch(`https://circumvent-cors.herokuapp.com/https://serpapi.com/search?q=${place}&tbm=isch&ijn=1&api_key=93d0d8be2336e19b1d86dbcd1a88a51f676e43739237f5cc47af63eca4bc0cc7`);
-    log('yo2');
     response = await response.json();
-    log('yo3');
     log(response);
+    return response['image_results'][0]['link'];
 }
 
+async function getPlaceDescription(place) {
+    return 'https://en.wikipedia.org/wiki/' + place;
+}
 
