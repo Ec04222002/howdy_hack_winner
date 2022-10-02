@@ -332,10 +332,8 @@ transition: 0.2s;
 .card .content .btn button:hover{
 transform: scale(0.9);
 }
-
 /*timeline*/
 .timeline-popup{
-    display:none;
     position: absolute;
     z-index: 1;
     width: 100vw;
@@ -355,12 +353,12 @@ overflow-x: auto;
 }
 #timeline-slider .card{
   position: relative;
-width: 290px;
+width: 19vw;
 margin: 0 10px;
 background: #fff;
 }
 #timeline-slider .card .img{
-height: 250px;
+height: 19vw;
 width: 100%;
 }
 #timeline-slider .card .img img{
@@ -405,4 +403,14 @@ transition: 0.2s;
 }
 #timeline-slider .card .content .btn button:hover{
 transform: scale(0.9);
+}
+.left-arrow-icon{
+  position: absolute;
+  top: 5px;
+  left: 10px;
+}
+.right-arrow-icon{
+  position: absolute;
+  top: 5px;
+  right: 10px;
 }
