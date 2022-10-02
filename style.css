@@ -496,19 +496,27 @@ transition: 0.2s;
 transform: scale(0.9);
 }
 
-.hovering{
+/* .hovering{
   opacity: 1!important;
-}
+} */
 .left-arrow-icon{
+  cursor: pointer;
   position: absolute;
-  top: 5px;
-  left: 10px;
+  font-size: 22px;
+  z-index: 100;
+  opacity: 0;
+  top: 15px;
+  left: 15px;
 }
 
 
 
 .right-arrow-icon{
+  cursor: pointer;
   position: absolute;
-  top: 5px;
-  right: 10px;
+  z-index: 100;
+  opacity: 0;
+  font-size: 22px;
+  top: 15px;
+  right: 15px;
 }

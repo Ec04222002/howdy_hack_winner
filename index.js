@@ -285,7 +285,7 @@ function afterApiResultTimeline(){
             let content = `
             <div class="card">
             <a target="_blank" rel="noopener noreferrer"  href = 'https://www.google.com/maps/dir/${result.name.replace(/'/g,"")}'>
-            <div class="left-arrow-icon" style= color: Tomato;"><i class="fa fa-globe fa-lg"></i></div> 
+            <div class="left-arrow-icon"><i class="fa fa-globe fa-lg"></i></div> 
             </a>
             <div class="right-arrow-icon"><i class="fa fa-refresh fa-lg"></i></div>
                 <div class="img">
@@ -303,7 +303,7 @@ function afterApiResultTimeline(){
 
             container.innerHTML += content;
 
-            let imgHover = doc.querySelector("#timeline-slider > .card > .img");
+
             
 
             
@@ -314,11 +314,17 @@ function afterApiResultTimeline(){
         ele.addEventListener('mouseover', (e)=>{
             e.target.classList.add("sightsee-hover-anime");
             e.target.parentElement.parentElement.querySelector(".content > .btn").style.opacity = 1;
+            e.target.parentElement.parentElement.querySelector(".left-arrow-icon").style.opacity = 1;
+            e.target.parentElement.parentElement.querySelector(".right-arrow-icon").style.opacity = 1;
         })
         ele.addEventListener('mouseout', (e)=>{
-            if(e.relatedTarget.id == "openWikiBtn") return;
+            let s = e.relatedTarget.id;
+            let i = e.relatedTarget.className;
+            if(e.relatedTarget != null && (s == "openWikiBtn" || i == 'left-arrow-icon' || i == 'right-arrow-icon' || i == "fa fa-globe fa-lg" || i == "fa fa-refresh fa-lg")) return;
             e.target.classList.remove("sightsee-hover-anime");
             e.target.parentElement.parentElement.querySelector(".content > .btn").style.opacity = 0;
+            e.target.parentElement.parentElement.querySelector(".left-arrow-icon").style.opacity = 0;
+            e.target.parentElement.parentElement.querySelector(".right-arrow-icon").style.opacity = 0;
 
         })
     })
