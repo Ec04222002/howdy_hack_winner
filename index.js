@@ -81,13 +81,15 @@ window.onload = () => {
             e.target.previousElementSibling.style.opacity = 0;
         })
         ele.addEventListener('click', (e)=>{
+            log('click')
             sightseeingPopup.classList.remove("show");
             timeLinePopup.style.display = "block"
             plane.classList.add("animated")
-            
+            log('before')
             plane.addEventListener("animationstart", (ev)=>{
                 i = 0;
                 let liftAnime = setInterval(()=>{
+                    log('int')
                     card[i].classList.add('animated')
                     card[i].addEventListener('animationend', (e)=>{
                         e.target.style.opacity = 1;
@@ -123,7 +125,6 @@ window.onload = () => {
         main.classList.remove("popup-showing");
     };
 }
-
 // ---------------------------API-------------------------------------
 // location score
 async function getCentLatLong(city){
