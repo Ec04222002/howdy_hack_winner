@@ -4,7 +4,6 @@ doc = document
 
 
 window.onload = () => {
-    initialSearch("paris");
     let searchBox = doc.querySelector(".search-box");
     let search = doc.querySelector('#search');
     let main = doc.getElementsByTagName('main')[0]
@@ -47,6 +46,7 @@ window.onload = () => {
         if(value == undefined || value.trim() === "" || value.trim().length <=2 ){
             return;
         }
+        await initialSearch(value);
         sightseeingPopup.classList.add("show")
         main.classList.add("popup-showing");
         
@@ -194,29 +194,38 @@ const container = document.getElementById('timeline-slider');
   }
 
 function buildTimeline(){
+    console.log("---------------------------api-",apiResult)
+    let cards = doc.querySelectorAll('.slider > .card');
+    cards.forEach((card, idx)=>{
+    log(card)
+    let img = card.querySelector(".img img");
+    let title = card.querySelector(".content > .title")
+    img.src = apiResult[idx].image_url;
+    title.innerText = apiResult[idx].name;
+});
     apiResult.forEach((result, idx) => {
         // Create card element
         const card = document.createElement('div');
         card.classList = 'card-body draggable = "true"';
     
         // Construct card content
-        let content = `
-        <div class="card">
-            <div class="left-arrow-icon"><i class="fa fa-chevron-left"></i></div> 
-            <div class="right-arrow-icon"><i class="fa fa-chevron-right"></i></div> 
-            <div class="img">
-                <img src="${result.image_url}">
-            </div>
-            <div class="content">
-                <div class="title">
-                        ${result.name}
-                </div>
-                <div class="btn">
-                    <button>Read Wiki</button>
-                </div>
-            </div>
-        </div> `;
-        container.innerHTML += content;
+        // let content = `
+        // <div class="card">
+        //     <div class="left-arrow-icon"><i class="fa fa-chevron-left"></i></div> 
+        //     <div class="right-arrow-icon"><i class="fa fa-chevron-right"></i></div> 
+        //     <div class="img">
+        //         <img src="${result.image_url}">
+        //     </div>
+        //     <div class="content">
+        //         <div class="title">
+        //                 ${result.name}
+        //         </div>
+        //         <div class="btn">
+        //             <button>Read Wiki</button>
+        //         </div>
+        //     </div>
+        // </div> `;
+        // container.innerHTML += content;
 });
 }
 
