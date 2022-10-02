@@ -88,7 +88,17 @@ position: absolute;
   opacity: 0;
   transition: 400ms cubic-bezier(0.600, 0.040, 0.735, 0.990);
   }
+  .left-arrow-icon{
+    position: absolute;
+    top: 5px;
+    left: 10px;
 
+      }
+  .right-arrow-icon{
+    position: absolute;
+    top: 5px;
+    right: 10px;
+      }
   .go-in {
     opacity: 1;
     pointer-events: all;
@@ -386,6 +396,7 @@ overflow-x: auto;
    display: none;
 }
 .slider .card{
+  position:relative;
 width: 370px;
 margin: 0 10px;
 background: #fff;
@@ -402,12 +413,12 @@ object-fit: cover;
 .slider .card .content{
 padding: 10px 20px;
 }
-.slider .card .content .title{
+.card .content .title{
 color:black;
 font-size: 25px;
 font-weight: 600;
 }
-.slider .card .content .sub-title{
+.card .content .sub-title{
 font-size: 20px;
 font-weight: 600;
 color: #e74c3c;
@@ -435,5 +446,78 @@ cursor: pointer;
 transition: 0.2s;
 }
 .card .content .btn button:hover{
+transform: scale(0.9);
+}
+
+/*timeline*/
+.timeline-popup{
+    position: absolute;
+    z-index: 1;
+    width: 100vw;
+    outline: solid green;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+#timeline-slider{
+display: grid;
+grid-auto-flow: column;
+grid-auto-columns: 20%;
+overflow-x: auto;
+}
+::-webkit-scrollbar {
+   display: none;
+}
+#timeline-slider .card{
+  position: relative;
+width: 290px;
+margin: 0 10px;
+background: #fff;
+}
+#timeline-slider .card .img{
+height: 250px;
+width: 100%;
+}
+#timeline-slider .card .img img{
+height: 100%;
+width: 100%;
+object-fit: cover;
+}
+#timeline-slider .card .content{
+padding: 10px 20px;
+}
+#timeline-slider .card .content .title{
+color:black;
+font-size: 25px;
+font-weight: 600;
+}
+#timeline-slider .card .content .sub-title{
+font-size: 20px;
+font-weight: 600;
+color: #e74c3c;
+line-height: 20px;
+}
+#timeline-slider .card .content p{
+color:black;
+text-align: justify;
+margin: 10px 0;
+}
+#timeline-slider .card .content .btn{
+display: block;
+text-align: left;
+margin: 10px 0;
+}
+#timeline-slider .card .content .btn button{
+background: #e74c3c;
+color: #fff;
+border: none;
+outline: none;
+font-size: 17px;
+padding: 5px 8px;
+border-radius: 5px;
+cursor: pointer;
+transition: 0.2s;
+}
+#timeline-slider .card .content .btn button:hover{
 transform: scale(0.9);
 }
