@@ -28,6 +28,8 @@ window.onload = () => {
         btn.addEventListener('click', (e)=>{
             const wikiPage = getPlaceDescription(e.target.parentElement.parentElement.querySelector(".title").innerText);
             e.stopPropagation();
+            e.target.style.opacity = 0;
+            e.target.parentElement.querySelector("img").classList.remove("sightsee-hover-anime")
             window.open(wikiPage, '_blank')
         })
     });
@@ -310,7 +312,13 @@ function afterApiResultTimeline(){
             
 
     });
+
+
     doc.querySelectorAll('#timeline-slider > .card > .img').forEach((ele)=>{
+        // let wikiBtn= ele.parentElement.querySelector(".content > .btn");
+        // wikiBtn.onclick = (e)=>{
+            
+        // }
         ele.addEventListener('mouseover', (e)=>{
             e.target.classList.add("sightsee-hover-anime");
             e.target.parentElement.parentElement.querySelector(".content > .btn").style.opacity = 1;
