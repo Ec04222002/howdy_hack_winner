@@ -102,7 +102,7 @@ function test(){
     mode:"no-cors"
     };
 
-    const response2 = fetch("https://google.com")
+    const response2 = fetch("https://google.com", requestOptions)
     .then(response => console.log("response", response))
     .then(result => console.log(result))
     .catch(error => console.log('error', error));
