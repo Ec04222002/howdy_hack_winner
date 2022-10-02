@@ -1,9 +1,10 @@
+
 log = console.log
 doc = document
 
 
 window.onload = () => {
-    // test();
+    initialSearch("paris");
     let searchBox = doc.querySelector(".search-box");
     let search = doc.querySelector('#search');
     let main = doc.getElementsByTagName('main')[0]
@@ -125,85 +126,6 @@ window.onload = () => {
 
 // ---------------------------API-------------------------------------
 // location score
-async function test(){
-    
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", "Bearer jh_k1Fc1TSedLISuqFALl5AXjc21dVAoJVSwdciy-yYrVtD2NUjZpCq8pnQmU3k1JQ2C-h8pXk54bB9UvtRkp9mve1fkTL_1L3wIPwxhbsE6d-Otrz5TYYfTrQU5Y3Yx");
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({
-    "Email": "tannergz@tamu.edu"
-    });
-
-    var requestOptions = {
-    method: 'GET',
-    headers: myHeaders,
-    redirect: 'follow',
-    mode:"no-cors"
-    };
-
-        const response2 = await fetch('https://api.yelp.com/v3/businesses/search?term=attractions&latitude=37.786882&longitude=-122.399972', {
-        mode: 'no-cors',
-        headers: {
-          Authorization: "Bearer " + "jh_k1Fc1TSedLISuqFALl5AXjc21dVAoJVSwdciy-yYrVtD2NUjZpCq8pnQmU3k1JQ2C-h8pXk54bB9UvtRkp9mve1fkTL_1L3wIPwxhbsE6d-Otrz5TYYfTrQU5Y3Yx"
-        }
-    }).catch(
-        err => console.log(err.response.data)
-      );
-      console.log(response2);
-    
-}
-
-async function getPoints(latitude, longitude) {
-let response = null;
-response = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
-    method: 'POST',
-    body: new URLSearchParams({
-        'grant_type': 'client_credentials',
-        'client_id': 'fls24f6WUHCDcgChHHt6GwdjLAdiaKCd',
-        'client_secret': 'zJguGPK6zlVcCS4b'
-    })
-});
-
-    response = await response.json();
-    let token = response['access_token'];
-        
-    let url = `https://test.api.amadeus.com/v1/location/analytics/category-rated-areas?latitude=${latitude}&longitude=${longitude}`;
-
-    let response2 = await fetch(url, {
-        method: 'GET',
-        headers : {
-           "Authorization" : `Bearer ${token}` 
-        }
-    });
-
-    response2 = await response2.json();
-    log(response2)
-}
-
-//for getting center of city
-
-
-function getRecommend(lat, long, rad) {
-    var area = new google.maps.LatLng(lat, long);
-  
-    // infowindow = new google.maps.InfoWindow();
-  
-    map = new google.maps.Map(
-        document.getElementById('map'), {center: area, zoom: 15});
-  
-    var request = {
-      location: area,
-      radius: rad,
-      query: "sightseeing"
-    };
-  
-    var service = new google.maps.places.PlacesService(map);
-    log(service)
-  service.textSearch(request, (results, status) => {
-    log(results);
-  });
-  }
 async function getCentLatLong(city){
     let response = null
     const token = "pk.eyJ1IjoiY2gwMTEwZW4iLCJhIjoiY2w4cW1kdjI0MGNiMzNubWJnaXRieWJjbSJ9.KoS-o2b14qHproaOgMudTQ"
@@ -215,65 +137,53 @@ async function getCentLatLong(city){
     return json['features'][0]['center'];
 }
 
-async function getLocations(latitude, longitude, radius, category) {
-    let response = null;
-    response = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
-    method: 'POST',
-    body: new URLSearchParams({
-        'grant_type': 'client_credentials',
-        'client_id': 'fls24f6WUHCDcgChHHt6GwdjLAdiaKCd',
-        'client_secret': 'zJguGPK6zlVcCS4b'
+async function initialLocation (search, lat, long, rad) {
+    await axios.post('http://localhost:3001/initial-list', {
+      search: search,
+      longitude: long,
+      latitude: lat,
+      radius: rad
+    }).then(function (response) {
+      console.log(response.data)
+      for(let i=0; i<Math.min(response.data.total - 1, 12);i++){
+        apiResult[i] = {
+            'name':response.data.businesses[i].name,
+            'coordinates':response.data.businesses[i].coordinates,
+            'image_url':response.data.businesses[i].image_url,
+            'rating':response.data.businesses[i].rating
+        };
+    }
     })
-});
-
-    response = await response.json();
-    log(response)
-    let token = response['access_token'];
-
-    let url = `https://test.api.amadeus.com/v1/reference-data/locations/pois?latitude=${latitude}&longitude=${longitude}&radius=${radius}&page%5Blimit%5D=10&page%5Boffset%5D=0&categories=${category}`;
-
-    let response2 = await fetch(url, {
-        method: 'GET',
-        headers : {
-           "Authorization" : `Bearer ${token}` 
-        }
-    });
-
-    log(response2)
-    response2 = await response2.json();
-    return response2['data'];
+    .catch(function (error) {
+      console.log(error);
+    });    
 }
+function compare( a, b ) {
+    if ( a.rating < b.rating ){
+      return 1;
+    }
+    if ( a.rating > b.rating ){
+      return -1;
+    }
+    return 0;
+  }
 
-async function getImageFromLoc(place) {
-    let response = await fetch(`https://circumvent-cors.herokuapp.com/https://serpapi.com/search?q=${place}&tbm=isch&ijn=1&api_key=93d0d8be2336e19b1d86dbcd1a88a51f676e43739237f5cc47af63eca4bc0cc7`);
-    response = await response.json();
-    log(response);
-    return response['image_results'][0]['link'];
+async function initialSearch (city){
+    const [long, lat] = await getCentLatLong(city.trim());
+    await initialLocation("attractions", lat, long, 500);
+    console.log(apiResult)
+    apiResult.sort( compare );
+    buildTimeline();
 }
 
 async function getPlaceDescription(place) {
     return 'https://en.wikipedia.org/wiki/' + place;
 }
-
-
 // mapping out api result 
 
-const apiResult = [{
-    img: "../assets/capitol.png",
-    title: "title1"
-  }, {
-    img: "../assets/capitol.png",
-    title: "title2"
-  }, {
-    img: "../assets/capitol.png",
-    title: "title3"
-  },{
-    img: "../assets/capitol.png",
-    title: "title4"
-  },{
-    img: "../assets/capitol.png",
-    title: "title5"
-  }];
+
+let apiResult = [];
+
 
 const container = document.getElementById('timeline-slider');
 
@@ -282,28 +192,118 @@ const container = document.getElementById('timeline-slider');
     array.splice(to, 0, array.splice(from, 1)[0]);
   }
 
-apiResult.forEach((result, idx) => {
-    // Create card element
-    const card = document.createElement('div');
-  
-    // Construct card content
-    let content = `
+function buildTimeline(){
+    apiResult.forEach((result, idx) => {
+        // Create card element
+        const card = document.createElement('div');
+        card.classList = 'card-body draggable = "true"';
+    
+        // Construct card content
+        let content = `
         <div class="card">
             <div class="left-arrow-icon"><i class="fa fa-chevron-left"></i></div> 
             <div class="right-arrow-icon"><i class="fa fa-chevron-right"></i></div> 
             <div class="img">
-                <img src="${result.img}">
+                <img src="${result.image_url}">
             </div>
             <div class="content">
                 <div class="title">
-                        ${result.title}
+                        ${result.name}
                 </div>
                 <div class="btn">
                     <button>Read Wiki</button>
                 </div>
             </div>
         </div> `;
-    container.innerHTML += content;
+        container.innerHTML += content;
 });
+}
 
-var listItems = Array.from(document.querySelectorAll(".card")); 
+
+// async function getPoints(latitude, longitude) {
+// let response = null;
+// response = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
+//     method: 'POST',
+//     body: new URLSearchParams({
+//         'grant_type': 'client_credentials',
+//         'client_id': 'fls24f6WUHCDcgChHHt6GwdjLAdiaKCd',
+//         'client_secret': 'zJguGPK6zlVcCS4b'
+//     })
+// });
+
+//     response = await response.json();
+//     let token = response['access_token'];
+        
+//     let url = `https://test.api.amadeus.com/v1/location/analytics/category-rated-areas?latitude=${latitude}&longitude=${longitude}`;
+
+//     let response2 = await fetch(url, {
+//         method: 'GET',
+//         headers : {
+//            "Authorization" : `Bearer ${token}` 
+//         }
+//     });
+
+//     response2 = await response2.json();
+//     log(response2)
+// }
+
+// //for getting center of city
+
+
+// function getRecommend(lat, long, rad) {
+//     var area = new google.maps.LatLng(lat, long);
+  
+//     // infowindow = new google.maps.InfoWindow();
+  
+//     map = new google.maps.Map(
+//         document.getElementById('map'), {center: area, zoom: 15});
+  
+//     var request = {
+//       location: area,
+//       radius: rad,
+//       query: "sightseeing"
+//     };
+  
+//     var service = new google.maps.places.PlacesService(map);
+//     log(service)
+//   service.textSearch(request, (results, status) => {
+//     log(results);
+//   });
+//   }
+
+
+// async function getLocations(latitude, longitude, radius, category) {
+//     let response = null;
+//     response = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
+//     method: 'POST',
+//     body: new URLSearchParams({
+//         'grant_type': 'client_credentials',
+//         'client_id': 'fls24f6WUHCDcgChHHt6GwdjLAdiaKCd',
+//         'client_secret': 'zJguGPK6zlVcCS4b'
+//     })
+// });
+
+//     response = await response.json();
+//     log(response)
+//     let token = response['access_token'];
+
+//     let url = `https://test.api.amadeus.com/v1/reference-data/locations/pois?latitude=${latitude}&longitude=${longitude}&radius=${radius}&page%5Blimit%5D=10&page%5Boffset%5D=0&categories=${category}`;
+
+//     let response2 = await fetch(url, {
+//         method: 'GET',
+//         headers : {
+//            "Authorization" : `Bearer ${token}` 
+//         }
+//     });
+
+//     log(response2)
+//     response2 = await response2.json();
+//     return response2['data'];
+// }
+
+// async function getImageFromLoc(place) {
+//     let response = await fetch(`https://circumvent-cors.herokuapp.com/https://serpapi.com/search?q=${place}&tbm=isch&ijn=1&api_key=93d0d8be2336e19b1d86dbcd1a88a51f676e43739237f5cc47af63eca4bc0cc7`);
+//     response = await response.json();
+//     log(response);
+//     return response['image_results'][0]['link'];
+// }

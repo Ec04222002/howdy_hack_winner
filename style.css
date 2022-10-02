@@ -347,7 +347,11 @@ transform: scale(0.9);
 }
 /*timeline*/
 .timeline-popup{
+<<<<<<< HEAD
     display:none;
+=======
+  /* display:none; */
+>>>>>>> e7b9b339f2203c27b71fa50eb3da5b9e34a50fbd
     position: absolute;
     z-index: 1;
     width: 100vw;
