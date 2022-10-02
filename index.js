@@ -4,13 +4,13 @@ doc = document
 
 
 window.onload = () => {
+    let onWikiBtn = false;
     let searchBox = doc.querySelector(".search-box");
     let search = doc.querySelector('#search');
     let main = doc.getElementsByTagName('main')[0]
     // let timeLine = doc.querySelector()
     main.addEventListener('click', (e)=>{
         searchBox.classList.remove('border-searching')
-        log("click")
         e.stopPropagation()
     })
         search.addEventListener('click', (e)=>{
@@ -24,11 +24,23 @@ window.onload = () => {
         e.stopPropagation()
     })
 
-    // .left-arrow-icon.addEventListener('click', (e)=>{
-    //     console.log("howdy")
-    //     e.stopPropagation()
-    // })
-    
+    let readMoreBtns = doc.querySelectorAll("#wikiBtn")
+    readMoreBtns.forEach((btn)=>{
+        
+        // btn.addEventListener("mouseover", (e)=>{
+        //     log("over wiki ")
+        //     e.target.style.opacity = 1;
+        //    onWikiBtn = true;
+        // })
+        // btn.addEventListener("mouseout", (e)=>{
+        //     onWikiBtn = false;
+        // })
+        btn.addEventListener('click', (e)=>{
+            const wikiPage = getPlaceDescription(e.target.parentElement.parentElement.querySelector(".title").innerText);
+            e.stopPropagation();
+            window.open(wikiPage, '_blank')
+        })
+    });
     let goIcon = doc.querySelector('.go-icon')
     searchBox.addEventListener('keyup', (e)=>{
         if(e.target.value.trim().length > 0){
@@ -76,20 +88,20 @@ window.onload = () => {
             e.target.classList.add("sightsee-hover-anime");
             e.target.previousElementSibling.style.opacity = 1;
         })
-        ele.addEventListener('mouseleave', (e)=>{
+        ele.addEventListener('mouseout', (e)=>{
+            if(e.relatedTarget.id == "wikiBtn") return;
             e.target.classList.remove("sightsee-hover-anime");
             e.target.previousElementSibling.style.opacity = 0;
         })
         ele.addEventListener('click', (e)=>{
-            log('click')
+            
+            e.stopPropagation();
             sightseeingPopup.classList.remove("show");
             timeLinePopup.style.display = "block"
             plane.classList.add("animated")
-            log('before')
             plane.addEventListener("animationstart", (ev)=>{
                 i = 0;
                 let liftAnime = setInterval(()=>{
-                    log('int')
                     card[i].classList.add('animated')
                     card[i].addEventListener('animationend', (e)=>{
                         e.target.style.opacity = 1;
@@ -115,7 +127,7 @@ window.onload = () => {
             //     card.style.pointerEvents = "all"
             // })
            
-        })
+        }, true)
     }
 
     let backBtn = doc.querySelector("#backBtn");
@@ -134,7 +146,6 @@ async function getCentLatLong(city){
     `https://api.mapbox.com/geocoding/v5/mapbox.places/${city}.json?proximity=ip&types=place%2Cpostcode%2Caddress&access_token=${token}`
     response = await fetch(url)
     json = await response.json()
-    log(json)
     return json['features'][0]['center'];
 }
 
@@ -145,7 +156,6 @@ async function initialLocation (search, lat, long, rad) {
       latitude: lat,
       radius: rad
     }).then(function (response) {
-      console.log(response.data)
       for(let i=0; i<Math.min(response.data.total - 1, 12);i++){
         apiResult[i] = {
             'name':response.data.businesses[i].name,
@@ -172,12 +182,11 @@ function compare( a, b ) {
 async function initialSearch (city){
     const [long, lat] = await getCentLatLong(city.trim());
     await initialLocation("attractions", lat, long, 500);
-    console.log(apiResult)
     apiResult.sort( compare );
     buildTimeline();
 }
 
-async function getPlaceDescription(place) {
+function getPlaceDescription(place) {
     return 'https://en.wikipedia.org/wiki/' + place;
 }
 // mapping out api result 
@@ -194,10 +203,8 @@ const container = document.getElementById('timeline-slider');
   }
 
 function buildTimeline(){
-    console.log("---------------------------api-",apiResult)
     let cards = doc.querySelectorAll('.slider > .card');
     cards.forEach((card, idx)=>{
-    log(card)
     let img = card.querySelector(".img img");
     let title = card.querySelector(".content > .title")
     img.src = apiResult[idx].image_url;

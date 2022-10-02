@@ -12,7 +12,6 @@
   
 }
 
-
 body{
   font-family: 'Poppins', sans-serif;
   overflow: hidden;
@@ -255,15 +254,14 @@ display: flex;
 justify-content: center;
 align-items: center;
   width: 100%;
-  height: 280px;
-  width: 280px;
+  height: 270px;
+  width: 270px;
 border-radius: 50%;
 background-color: var(--main-bg-color);
 }
 
 .slider .card .img button{
-  pointer-events: none;
- z-index: 100;
+ z-index: 200;
   opacity: 0;
   position: absolute;
   border-radius: 10px;
@@ -273,18 +271,14 @@ background-color: var(--main-bg-color);
   /* transition: all 2s ease-in-out; */
 }
 
-.slider .card .img button:hover{
-    width: 50px;
-
-}
 
 
 
 .slider .card .img img{
   cursor: pointer;
 border-radius: 50%;
-height: 270px;
-width: 270px;
+height: 260px;
+width: 260px;
 object-fit: cover;
 }
 
@@ -309,11 +303,11 @@ object-fit: cover;
 }
 .slider .card .content{
   text-align: center;
-  /* height: 10%; */
 }
+
 .slider .card .content .title{
 color:#fff;
-font-size: 25px;
+font-size: 21px;
 font-weight: 600;
 }
 .slider .card .content .sub-title{
@@ -368,12 +362,11 @@ overflow-x: auto;
 }
 #timeline-slider .card{
 border-radius: 25px;
-height: 280px;
+
   position: relative;
   opacity: 0;
   pointer-events: none;
-width: 18vw;
-margin: 0 15px;
+width: 19vw;
 background: transparent;
 
 }
@@ -456,7 +449,7 @@ padding: 10px 10px;
 }
 #timeline-slider .card .content .title{
 color:#fff;
-font-size: 22px;
+font-size: 20px;
 font-weight: 600;
 text-align: center;
 }
@@ -491,9 +484,13 @@ padding: 10px;
 cursor: pointer;
 transition: 0.2s;
 }
-/* #timeline-slider .card .content .btn button:hover{
+#timeline-slider .card .content .btn button:hover{
 transform: scale(0.9);
-} */
+}
+
+.hovering{
+  opacity: 1!important;
+}
 .left-arrow-icon{
   position: absolute;
   top: 5px;
