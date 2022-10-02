@@ -335,7 +335,7 @@ transform: scale(0.9);
 }
 /*timeline*/
 .timeline-popup{
-  display:none;
+  /* display:none; */
     position: absolute;
     z-index: 1;
     width: 100vw;

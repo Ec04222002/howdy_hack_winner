@@ -18,7 +18,16 @@ We want this section to:
   - Update the jokes array in our database
   - Respond with a successful status code (200)
 */
-app.post('/save-joke', (req, res) => {
+app.post('/initial-list', (req, res) => {
+    console.log(req.body)
+    axios.get(`https://api.yelp.com/v3/businesses/search?term=${req.body.search}&latitude=${req.body.latitude}&longitude=${req.body.longitude}&radius=${req.body.radius}`, {
+        headers: {
+          Authorization: "Bearer " + "jh_k1Fc1TSedLISuqFALl5AXjc21dVAoJVSwdciy-yYrVtD2NUjZpCq8pnQmU3k1JQ2C-h8pXk54bB9UvtRkp9mve1fkTL_1L3wIPwxhbsE6d-Otrz5TYYfTrQU5Y3Yx"
+        }
+      }).then(function (response) {
+        console.log(response)
+        res.send(response.data);
+      });
 })
 
 app.get('/', (req, res) => {
