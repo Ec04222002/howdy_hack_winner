@@ -259,10 +259,10 @@ function getPlaceDescription(place) {
 let apiResult = [];
 
 async function getTimeline(lat, long){
-    await locationSearchTimeline("restaurant", lat, long, 2)
-    await locationSearchTimeline("activity", lat, long, 2)
-    await locationSearchTimeline("dine_in", lat, long, 2)
-    await locationSearchTimeline("night_life", lat, long, 2)
+    await locationSearchTimeline("brunch", lat, long)
+    await locationSearchTimeline("activity", lat, long)
+    await locationSearchTimeline("dinner", lat, long)
+    await locationSearchTimeline("nightlife", lat, long)
     afterApiResultTimeline();
 }
 function setInitAttractions(){
@@ -291,13 +291,16 @@ function afterApiResultTimeline(){
     let container = document.getElementById('timeline-slider');
         apiResultTimeline.forEach((result, idx) => {
             // Create card element
+            log(`https://www.google.com/maps/place/${result.coordinates.latitude}N+${result.coordinates.longitude}E`)
             const card = document.createElement('div');
             card.classList = 'card-body';
             // Construct card content
             let content = `
             <div class="card">
-                <div class="left-arrow-icon"><i class="fa fa-chevron-left"></i></div> 
-                <div class="right-arrow-icon"><i class="fa fa-chevron-right"></i></div> 
+            <a target="_blank" rel="noopener noreferrer"  href = 'https://www.google.com/maps/dir/${result.name.replace(/'/g,"")}'>
+            <div class="left-arrow-icon" style= color: Tomato;"><i class="fa fa-globe fa-lg"></i></div> 
+            </a>
+            <div class="right-arrow-icon"><i class="fa fa-refresh fa-lg"></i></div>
                 <div class="img">
                     <img src="${result.image_url}">
                 </div>
