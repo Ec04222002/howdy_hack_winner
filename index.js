@@ -79,8 +79,8 @@ window.onload = () => {
     })
 
     let sightseeImgs = doc.querySelectorAll(".slider > .card .img img")
-    let plane = doc.querySelector("#plane-stream")
-    let card = doc.querySelectorAll("#timeline-slider .card")
+    // let plane = doc.querySelector("#plane-stream")
+
     let timeLinePopup = doc.querySelector(".timeline-popup")
     for(let i = 0; i < sightseeImgs.length; i++){
         let ele = sightseeImgs[i]
@@ -93,24 +93,45 @@ window.onload = () => {
             e.target.classList.remove("sightsee-hover-anime");
             e.target.previousElementSibling.style.opacity = 0;
         })
-        ele.addEventListener('click', (e)=>{
-            
-            e.stopPropagation();
+        ele.addEventListener('click', async (e)=>{
+            let lat = e.target.getAttribute("data-lat")
+            let long = e.target.getAttribute("data-long")
+            let name = e.target.getAttribute("data-title")
+            let image = e.target.getAttribute("data-img")
+            let rating = e.target.getAttribute("data-rating")
+            let distance = e.target.getAttribute("data-distance")
+            apiResultTimeline.push({
+                'name':name,
+                'coordinates':lat,
+                'image_url':image,
+                'rating':rating,
+                'distance':distance
+            });
+            // console.log("apiresulttimeline",apiResultTimeline);
+            await getTimeline(lat, long);
+
+            let cards = doc.querySelectorAll("#timeline-slider .card")
+            log("cards------------------------",cards)
             sightseeingPopup.classList.remove("show");
+            log('0')
             timeLinePopup.style.display = "block"
+            let plane = doc.querySelector("#plane-stream")
             plane.classList.add("animated")
+            log('2')
             plane.addEventListener("animationstart", (ev)=>{
+                console.log("entered")
                 i = 0;
                 let liftAnime = setInterval(()=>{
-                    card[i].classList.add('animated')
-                    card[i].addEventListener('animationend', (e)=>{
+                    cards[i].classList.add('animated')
+                    console.log("cards", cards)
+                    cards[i].addEventListener('animationend', (e)=>{
                         e.target.style.opacity = 1;
                         e.target.style.pointerEvents = "all";
                     })
                     // card[i].style.opacity = 1;
                     // card[i].style.pointerEvents = "all";
                     ++i;
-                    if(i == card.length){
+                    if(i == cards.length){
                         clearInterval(liftAnime);
                     }
                 }, 500);
@@ -138,7 +159,28 @@ window.onload = () => {
     };
 }
 // ---------------------------API-------------------------------------
-// location score
+// sorts based on closeness
+function compareDistance( a, b ) {
+    if ( a.distance < b.distance ){
+      return 1;
+    }
+    if ( a.distance > b.distance ){
+      return -1;
+    }
+    return 0;
+  }
+
+  //sorts based on rating
+function compare( a, b ) {
+    if ( a.rating < b.rating ){
+      return 1;
+    }
+    if ( a.rating > b.rating ){
+      return -1;
+    }
+    return 0;
+  }
+//gets coordinates for city
 async function getCentLatLong(city){
     let response = null
     const token = "pk.eyJ1IjoiY2gwMTEwZW4iLCJhIjoiY2w4cW1kdjI0MGNiMzNubWJnaXRieWJjbSJ9.KoS-o2b14qHproaOgMudTQ"
@@ -149,7 +191,8 @@ async function getCentLatLong(city){
     return json['features'][0]['center'];
 }
 
-async function initialLocation (search, lat, long, rad) {
+//searches initial 12 main attractions
+async function locationSearch (search, lat, long, rad) {
     await axios.post('http://localhost:3001/initial-list', {
       search: search,
       longitude: long,
@@ -161,7 +204,8 @@ async function initialLocation (search, lat, long, rad) {
             'name':response.data.businesses[i].name,
             'coordinates':response.data.businesses[i].coordinates,
             'image_url':response.data.businesses[i].image_url,
-            'rating':response.data.businesses[i].rating
+            'rating':response.data.businesses[i].rating,
+            'distance':response.data.businesses[i].distance
         };
     }
     })
@@ -169,21 +213,41 @@ async function initialLocation (search, lat, long, rad) {
       console.log(error);
     });    
 }
-function compare( a, b ) {
-    if ( a.rating < b.rating ){
-      return 1;
-    }
-    if ( a.rating > b.rating ){
-      return -1;
-    }
-    return 0;
-  }
 
+async function locationSearchTimeline (search, lat, long) {
+    let rad = 500;
+    await axios.post('http://localhost:3001/initial-list', {
+      search: search,
+      longitude: long,
+      latitude: lat,
+      radius: rad
+    }).then(function (response) {
+        let output = sortByDistance(response.data.businesses);
+        if(output.length == 0) return;
+        apiResultTimeline.push({
+            'name':output[1].name,
+            'coordinates':output[1].coordinates,
+            'image_url':output[1].image_url,
+            'rating':output[1].rating
+        });
+        console.log("------------------------------iteration---", apiResultTimeline)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+//sort by distance
+function sortByDistance(array){
+    array.sort( compareDistance );
+    return array;
+}
+
+//gets first 12
 async function initialSearch (city){
     const [long, lat] = await getCentLatLong(city.trim());
-    await initialLocation("attractions", lat, long, 500);
+    await locationSearch("attractions", lat, long, 500);
     apiResult.sort( compare );
-    buildTimeline();
+    setInitAttractions();
 }
 
 function getPlaceDescription(place) {
@@ -194,133 +258,58 @@ function getPlaceDescription(place) {
 
 let apiResult = [];
 
-
-const container = document.getElementById('timeline-slider');
-
-  // Changes an elements's position in array
-  function arrayMove(array, from, to) {
-    array.splice(to, 0, array.splice(from, 1)[0]);
-  }
-
-function buildTimeline(){
+async function getTimeline(lat, long){
+    await locationSearchTimeline("restaurant", lat, long, 2)
+    await locationSearchTimeline("activity", lat, long, 2)
+    await locationSearchTimeline("dine_in", lat, long, 2)
+    await locationSearchTimeline("night_life", lat, long, 2)
+    afterApiResultTimeline();
+}
+function setInitAttractions(){
     let cards = doc.querySelectorAll('.slider > .card');
     cards.forEach((card, idx)=>{
-    let img = card.querySelector(".img img");
-    let title = card.querySelector(".content > .title")
-    img.src = apiResult[idx].image_url;
-    title.innerText = apiResult[idx].name;
-});
-    apiResult.forEach((result, idx) => {
-        // Create card element
-        const card = document.createElement('div');
-        card.classList = 'card-body draggable = "true"';
-    
-        // Construct card content
-        // let content = `
-        // <div class="card">
-        //     <div class="left-arrow-icon"><i class="fa fa-chevron-left"></i></div> 
-        //     <div class="right-arrow-icon"><i class="fa fa-chevron-right"></i></div> 
-        //     <div class="img">
-        //         <img src="${result.image_url}">
-        //     </div>
-        //     <div class="content">
-        //         <div class="title">
-        //                 ${result.name}
-        //         </div>
-        //         <div class="btn">
-        //             <button>Read Wiki</button>
-        //         </div>
-        //     </div>
-        // </div> `;
-        // container.innerHTML += content;
-});
+        let img = card.querySelector(".img img");
+        let title = card.querySelector(".content > .title")
+        img.src = apiResult[idx].image_url;
+        let lat = apiResult[idx].coordinates.latitude;
+        let long = apiResult[idx].coordinates.longitude;
+        let img1 = apiResult[idx].image_url;
+        let title1 = apiResult[idx].name;
+        let distance = apiResult[idx].distance;
+        let rating = apiResult[idx].rating;
+        img.setAttribute("data-lat", lat)
+        img.setAttribute("data-long", long)
+        img.setAttribute("data-img", img1)
+        img.setAttribute("data-title", title1)
+        img.setAttribute("data-distance", distance)
+        img.setAttribute("data-rating", rating)
+        title.innerText = apiResult[idx].name;
+    })
 }
-
-
-// async function getPoints(latitude, longitude) {
-// let response = null;
-// response = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
-//     method: 'POST',
-//     body: new URLSearchParams({
-//         'grant_type': 'client_credentials',
-//         'client_id': 'fls24f6WUHCDcgChHHt6GwdjLAdiaKCd',
-//         'client_secret': 'zJguGPK6zlVcCS4b'
-//     })
-// });
-
-//     response = await response.json();
-//     let token = response['access_token'];
-        
-//     let url = `https://test.api.amadeus.com/v1/location/analytics/category-rated-areas?latitude=${latitude}&longitude=${longitude}`;
-
-//     let response2 = await fetch(url, {
-//         method: 'GET',
-//         headers : {
-//            "Authorization" : `Bearer ${token}` 
-//         }
-//     });
-
-//     response2 = await response2.json();
-//     log(response2)
-// }
-
-// //for getting center of city
-
-
-// function getRecommend(lat, long, rad) {
-//     var area = new google.maps.LatLng(lat, long);
-  
-//     // infowindow = new google.maps.InfoWindow();
-  
-//     map = new google.maps.Map(
-//         document.getElementById('map'), {center: area, zoom: 15});
-  
-//     var request = {
-//       location: area,
-//       radius: rad,
-//       query: "sightseeing"
-//     };
-  
-//     var service = new google.maps.places.PlacesService(map);
-//     log(service)
-//   service.textSearch(request, (results, status) => {
-//     log(results);
-//   });
-//   }
-
-
-// async function getLocations(latitude, longitude, radius, category) {
-//     let response = null;
-//     response = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
-//     method: 'POST',
-//     body: new URLSearchParams({
-//         'grant_type': 'client_credentials',
-//         'client_id': 'fls24f6WUHCDcgChHHt6GwdjLAdiaKCd',
-//         'client_secret': 'zJguGPK6zlVcCS4b'
-//     })
-// });
-
-//     response = await response.json();
-//     log(response)
-//     let token = response['access_token'];
-
-//     let url = `https://test.api.amadeus.com/v1/reference-data/locations/pois?latitude=${latitude}&longitude=${longitude}&radius=${radius}&page%5Blimit%5D=10&page%5Boffset%5D=0&categories=${category}`;
-
-//     let response2 = await fetch(url, {
-//         method: 'GET',
-//         headers : {
-//            "Authorization" : `Bearer ${token}` 
-//         }
-//     });
-
-//     log(response2)
-//     response2 = await response2.json();
-//     return response2['data'];
-// }
-
-// async function getImageFromLoc(place) {
-//     let response = await fetch(`https://circumvent-cors.herokuapp.com/https://serpapi.com/search?q=${place}&tbm=isch&ijn=1&api_key=93d0d8be2336e19b1d86dbcd1a88a51f676e43739237f5cc47af63eca4bc0cc7`);
-//     response = await response.json();
-//     log(response);
-//     return response['image_results'][0]['link'];
-// }
+let apiResultTimeline = [];
+function afterApiResultTimeline(){
+    let container = document.getElementById('timeline-slider');
+        apiResultTimeline.forEach((result, idx) => {
+            // Create card element
+            const card = document.createElement('div');
+            card.classList = 'card-body';
+            // Construct card content
+            let content = `
+            <div class="card">
+                <div class="left-arrow-icon"><i class="fa fa-chevron-left"></i></div> 
+                <div class="right-arrow-icon"><i class="fa fa-chevron-right"></i></div> 
+                <div class="img">
+                    <img src="${result.image_url}">
+                </div>
+                <div class="content">
+                    <div class="title">
+                            ${result.name}
+                    </div>
+                    <div class="btn">
+                        <button>Read Wiki</button>
+                    </div>
+                </div>
+            </div> `;
+            container.innerHTML += content;
+    });
+}
