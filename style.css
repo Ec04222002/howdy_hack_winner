@@ -357,7 +357,7 @@ transform: scale(0.9);
     transform: translate(-50%, -50%);
 }
 #timeline-slider{
-/* display: none; */
+
 display: grid;
 grid-auto-flow: column;
 grid-auto-columns: 20%;
