@@ -99,7 +99,7 @@ function test(){
     method: 'GET',
     headers: myHeaders,
     redirect: 'follow',
-
+    mode:"no-cors"
     };
 
     const response2 = fetch("https://google.com")
