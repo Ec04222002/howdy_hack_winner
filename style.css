@@ -515,9 +515,10 @@ transform: scale(0.9);
   cursor: pointer;
   right: 15px;
   font-size: 40px;
+
 }
 #saveBtn{
-  top: 64vh;
+  top: 65vh;
   right: 25px;
   position: absolute;
   display: flex;
