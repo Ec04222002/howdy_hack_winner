@@ -287,6 +287,12 @@ object-fit: cover;
   filter: brightness(50%) blur(1px);
 }
 
+.onHoverAnime{
+  cursor: pointer;
+  filter: brightness(50%) blur(1px);
+}
+
+
 .navBtns{
   display:flex;
   justify-content:space-between;
@@ -390,7 +396,7 @@ background: transparent;
     height: 13px;
 }
 #plane-stream.animated{
-    animation: stream 3.5s ease-in-out;
+    animation: stream 4s ease-in-out;
     width:calc(100vw - 30px);
 }
 #plane-path > i{
@@ -435,6 +441,7 @@ background: transparent;
 #timeline-slider .card .img{
 height: 80%;
 width: 100%;
+cursor: pointer;
 }
 #timeline-slider .card .img img{
 border-radius: 25px;

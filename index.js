@@ -4,7 +4,6 @@ doc = document
 
 
 window.onload = () => {
-    let onWikiBtn = false;
     let searchBox = doc.querySelector(".search-box");
     let search = doc.querySelector('#search');
     let main = doc.getElementsByTagName('main')[0]
@@ -26,15 +25,6 @@ window.onload = () => {
 
     let readMoreBtns = doc.querySelectorAll("#wikiBtn")
     readMoreBtns.forEach((btn)=>{
-        
-        // btn.addEventListener("mouseover", (e)=>{
-        //     log("over wiki ")
-        //     e.target.style.opacity = 1;
-        //    onWikiBtn = true;
-        // })
-        // btn.addEventListener("mouseout", (e)=>{
-        //     onWikiBtn = false;
-        // })
         btn.addEventListener('click', (e)=>{
             const wikiPage = getPlaceDescription(e.target.parentElement.parentElement.querySelector(".title").innerText);
             e.stopPropagation();
@@ -58,15 +48,17 @@ window.onload = () => {
         if(value == undefined || value.trim() === "" || value.trim().length <=2 ){
             return;
         }
+        
         await initialSearch(value);
         sightseeingPopup.classList.add("show")
         main.classList.add("popup-showing");
+        planeImg.classList.add("fly-anime")
         
         // const [long, lat] = await getCentLatLong(value.trim());
         
         // const points = await getPoints(lat, long);
         // let locations =  getRecommend(lat, long, 500);
-        planeImg.classList.add("fly-anime")
+        
         
     }
     form.onsubmit = async (e)=> {
@@ -108,22 +100,17 @@ window.onload = () => {
                 'distance':distance
             });
             // console.log("apiresulttimeline",apiResultTimeline);
-            await getTimeline(lat, long);
-
-            let cards = doc.querySelectorAll("#timeline-slider .card")
-            log("cards------------------------",cards)
             sightseeingPopup.classList.remove("show");
-            log('0')
+            let plane = doc.querySelector("#plane-stream");
+            plane.classList.add("animated");
+            await getTimeline(lat, long);
+            plane = doc.querySelector("#plane-stream")
+            let cards = doc.querySelectorAll("#timeline-slider .card")
             timeLinePopup.style.display = "block"
-            let plane = doc.querySelector("#plane-stream")
-            plane.classList.add("animated")
-            log('2')
             plane.addEventListener("animationstart", (ev)=>{
-                console.log("entered")
                 i = 0;
                 let liftAnime = setInterval(()=>{
                     cards[i].classList.add('animated')
-                    console.log("cards", cards)
                     cards[i].addEventListener('animationend', (e)=>{
                         e.target.style.opacity = 1;
                         e.target.style.pointerEvents = "all";
@@ -134,7 +121,7 @@ window.onload = () => {
                     if(i == cards.length){
                         clearInterval(liftAnime);
                     }
-                }, 500);
+                }, 550);
             })
             // for(var i = 0; i < card.length; i++){
             //     const ele = card[i]
@@ -305,11 +292,31 @@ function afterApiResultTimeline(){
                     <div class="title">
                             ${result.name}
                     </div>
-                    <div class="btn">
-                        <button>Read Wiki</button>
+                    <div class="btn" style = "opacity: 0"onclick = "window.open('https://en.wikipedia.org/wiki/${result.name}', '_blank')" id = "wikiBtn">
+                        <button id ="openWikiBtn" >Read Wiki</button>
                     </div>
                 </div>
             </div> `;
+
             container.innerHTML += content;
+
+            let imgHover = doc.querySelector("#timeline-slider > .card > .img");
+            
+
+            
+            
+
     });
+    doc.querySelectorAll('#timeline-slider > .card > .img').forEach((ele)=>{
+        ele.addEventListener('mouseover', (e)=>{
+            e.target.classList.add("sightsee-hover-anime");
+            e.target.parentElement.parentElement.querySelector(".content > .btn").style.opacity = 1;
+        })
+        ele.addEventListener('mouseout', (e)=>{
+            if(e.relatedTarget.id == "openWikiBtn") return;
+            e.target.classList.remove("sightsee-hover-anime");
+            e.target.parentElement.parentElement.querySelector(".content > .btn").style.opacity = 0;
+
+        })
+    })
 }
