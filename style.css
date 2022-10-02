@@ -509,7 +509,34 @@ transform: scale(0.9);
   left: 15px;
 }
 
+#delete{
+  position: absolute;
+  top: 0;
+  cursor: pointer;
+  right: 15px;
+  font-size: 40px;
+}
+#saveBtn{
+  top: 64vh;
+  right: 25px;
+  position: absolute;
+  display: flex;
+  font-size: 36px;
+}
+#email, #save{
+  cursor: pointer;
+  padding: 0px 22px;
+}
+/* #email, #save{
+  position: absolute;
+  font-size: 35px;
+  top: -20px;
+  left: 20px;
 
+}
+#save{
+  top: -80px;
+} */
 
 .right-arrow-icon{
   cursor: pointer;

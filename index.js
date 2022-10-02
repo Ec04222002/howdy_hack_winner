@@ -327,5 +327,9 @@ function afterApiResultTimeline(){
             e.target.parentElement.parentElement.querySelector(".right-arrow-icon").style.opacity = 0;
 
         })
-    })
+    });
+    // document.querySelector("#delete").onclick = ()=>{
+    //     doc.querySelector('.sight-popup').classList.remove("show");
+    //     main.classList.remove("popup-showing");
+    // }
 }
