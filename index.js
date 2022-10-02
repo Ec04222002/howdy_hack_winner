@@ -126,14 +126,32 @@ window.onload = () => {
 // ---------------------------API-------------------------------------
 // location score
 async function test(){
-    const response2 = await fetch('https://circumvent-cors.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=attractions&latitude=37.786882&longitude=-122.399972', {
-    headers: {
-      Authorization: "Bearer " + "jh_k1Fc1TSedLISuqFALl5AXjc21dVAoJVSwdciy-yYrVtD2NUjZpCq8pnQmU3k1JQ2C-h8pXk54bB9UvtRkp9mve1fkTL_1L3wIPwxhbsE6d-Otrz5TYYfTrQU5Y3Yx"
-    }
-}).catch(
-    err => console.log(err.response.data)
-  );
-  console.log(response2);
+    
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer jh_k1Fc1TSedLISuqFALl5AXjc21dVAoJVSwdciy-yYrVtD2NUjZpCq8pnQmU3k1JQ2C-h8pXk54bB9UvtRkp9mve1fkTL_1L3wIPwxhbsE6d-Otrz5TYYfTrQU5Y3Yx");
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+    "Email": "tannergz@tamu.edu"
+    });
+
+    var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow',
+    mode:"no-cors"
+    };
+
+        const response2 = await fetch('https://api.yelp.com/v3/businesses/search?term=attractions&latitude=37.786882&longitude=-122.399972', {
+        mode: 'no-cors',
+        headers: {
+          Authorization: "Bearer " + "jh_k1Fc1TSedLISuqFALl5AXjc21dVAoJVSwdciy-yYrVtD2NUjZpCq8pnQmU3k1JQ2C-h8pXk54bB9UvtRkp9mve1fkTL_1L3wIPwxhbsE6d-Otrz5TYYfTrQU5Y3Yx"
+        }
+    }).catch(
+        err => console.log(err.response.data)
+      );
+      console.log(response2);
+    
 }
 
 async function getPoints(latitude, longitude) {

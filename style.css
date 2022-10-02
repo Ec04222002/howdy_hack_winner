@@ -1,5 +1,6 @@
 :root{
   --main-bg-color: rgba(154,57,163,1);
+  --secondary-color: #CD7B3C;
 }
 
 
@@ -318,7 +319,7 @@ font-weight: 600;
 .slider .card .content .sub-title{
 font-size: 20px;
 font-weight: 600;
-color: #e74c3c;
+color: var(--secondary-color);
 line-height: 20px;
 }
 .card .content p{
