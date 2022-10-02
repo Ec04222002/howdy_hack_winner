@@ -1,3 +1,4 @@
+
 log = console.log
 doc = document
 
@@ -101,16 +102,12 @@ async function test(){
     redirect: 'follow',
     mode:"no-cors"
     };
-
-        const response2 = await fetch('https://api.yelp.com/v3/businesses/search?term=attractions&latitude=37.786882&longitude=-122.399972', {
-        mode: 'no-cors',
-        headers: {
-          Authorization: "Bearer " + "jh_k1Fc1TSedLISuqFALl5AXjc21dVAoJVSwdciy-yYrVtD2NUjZpCq8pnQmU3k1JQ2C-h8pXk54bB9UvtRkp9mve1fkTL_1L3wIPwxhbsE6d-Otrz5TYYfTrQU5Y3Yx"
-        }
-    }).catch(
+     axios.get('http://localhost:3001/', {
+      }).catch(
         err => console.log(err.response.data)
-      );
-      console.log(response2);
+      ) .then( (response) => {
+        console.log(response)
+      });
     
 }
 
