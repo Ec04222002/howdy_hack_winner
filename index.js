@@ -8,7 +8,6 @@ window.onload = () => {
     let search = doc.querySelector('#search');
     let main = doc.getElementsByTagName('main')[0]
     main.addEventListener('click', (e)=>{
-        log("click")
         searchBox.classList.remove('border-searching')
         e.stopPropagation()
     })
@@ -16,11 +15,7 @@ window.onload = () => {
         searchBox.classList.add('border-searching')
         e.stopPropagation()
     })
-
-  //  getPoints(100,100);
-    getLocations(41.397158,2.160873,1, 'SIGHTS');
-    getImageFromLoc('Empire State Building');
-    getPlaceDescription('');    
+  
     
     search.addEventListener('click', (e)=>{
         searchBox.classList.add('border-searching')
@@ -36,18 +31,29 @@ window.onload = () => {
         }
     })
     
+    
     let form = doc.querySelector('.search-form')
     let sightseeingPopup = doc.querySelector('.sight-popup')
-    form.onsubmit = (e)=>{
+    let onsubmit = async (value)=>{
+        if(value == undefined || value.trim() === "" || value.trim().length <=2 ){
+            return;
+        }
         sightseeingPopup.classList.add("show")
         main.classList.add("popup-showing");
-        e.preventDefault();
         
+        const [long, lat] = await getCentLatLong(value.trim());
+        
+        // const points = await getPoints(lat, long);
+        let locations =  getRecommend(lat, long, 500);
+        
+    }
+    form.onsubmit = async (e)=> {
+        e.preventDefault();
+        onsubmit(search.value);
     }
 
     goIcon.addEventListener("click", (e)=>{
-        sightseeingPopup.classList.add("show")
-        main.classList.add("popup-showing");  
+        onsubmit(search.value);
     })
 
     let sightseeImgs = doc.querySelectorAll(".card .img img")
@@ -67,12 +73,14 @@ window.onload = () => {
 
     let backBtn = doc.querySelector("#backBtn");
     backBtn.onclick = (e)=>{
+
         sightseeingPopup.classList.remove("show");
         main.classList.remove("popup-showing");
     }
     
 };
 
+// location score
 async function getPoints(latitude, longitude) {
 let response = null;
 response = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
@@ -97,8 +105,42 @@ response = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', 
     });
 
     response2 = await response2.json();
+    log(response2)
 }
 
+//for getting center of city
+
+
+function getRecommend(lat, long, rad) {
+    var area = new google.maps.LatLng(lat, long);
+  
+    // infowindow = new google.maps.InfoWindow();
+  
+    map = new google.maps.Map(
+        document.getElementById('map'), {center: area, zoom: 15});
+  
+    var request = {
+      location: area,
+      radius: rad,
+      query: "sightseeing"
+    };
+  
+    var service = new google.maps.places.PlacesService(map);
+    log(service)
+  service.textSearch(request, (results, status) => {
+    log(results);
+  });
+  }
+async function getCentLatLong(city){
+    let response = null
+    const token = "pk.eyJ1IjoiY2gwMTEwZW4iLCJhIjoiY2w4cW1kdjI0MGNiMzNubWJnaXRieWJjbSJ9.KoS-o2b14qHproaOgMudTQ"
+    const url = 
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${city}.json?proximity=ip&types=place%2Cpostcode%2Caddress&access_token=${token}`
+    response = await fetch(url)
+    json = await response.json()
+    log(json)
+    return json['features'][0]['center'];
+}
 async function getLocations(latitude, longitude, radius, category) {
     let response = null;
     response = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
@@ -111,6 +153,7 @@ async function getLocations(latitude, longitude, radius, category) {
 });
 
     response = await response.json();
+    log(response)
     let token = response['access_token'];
 
     let url = `https://test.api.amadeus.com/v1/reference-data/locations/pois?latitude=${latitude}&longitude=${longitude}&radius=${radius}&page%5Blimit%5D=10&page%5Boffset%5D=0&categories=${category}`;
@@ -122,7 +165,9 @@ async function getLocations(latitude, longitude, radius, category) {
         }
     });
 
+    log(response2)
     response2 = await response2.json();
+    return response2['data'];
 }
 
 async function getImageFromLoc(place) {

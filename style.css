@@ -208,6 +208,8 @@ button{
     position: absolute;
     z-index: 1;
     width: 100vw;
+    
+   opacity: 0;
     top: -50%;
     left: 50%;
     transform: translate(-50%,-50%);
@@ -219,6 +221,7 @@ button{
     min-width: 300px;
 }
 .sight-popup.show{
+    opacity: 1;
     visibility: visible;
     z-index: 200;
     top: 50%;
