@@ -30,6 +30,51 @@ window.onload = () => {
             goIcon.classList.remove('go-in')
         }
     })
+    let form = doc.querySelector('.search-form')
+    let sightseeingPopup = doc.querySelector('.sight-popup')
+    let onsubmit = async (value)=>{
+        if(value == undefined || value.trim() === "" || value.trim().length <=2 ){
+            return;
+        }
+        sightseeingPopup.classList.add("show")
+        main.classList.add("popup-showing");
+        
+        const [long, lat] = await getCentLatLong(value.trim());
+        
+        // const points = await getPoints(lat, long);
+        let locations =  getRecommend(lat, long, 500);
+        
+    }
+    form.onsubmit = async (e)=> {
+        e.preventDefault();
+        onsubmit(search.value);
+    }
+
+    goIcon.addEventListener("click", (e)=>{
+        onsubmit(search.value);
+    })
+
+    let sightseeImgs = doc.querySelectorAll(".card .img img")
+    
+    for(let i = 0; i < sightseeImgs.length; i++){
+        let ele = sightseeImgs[i]
+        ele.addEventListener('mouseover', (e)=>{
+            e.target.classList.add("sightsee-hover-anime");
+            e.target.previousElementSibling.style.opacity = 1;
+        })
+        ele.addEventListener('mouseleave', (e)=>{
+            e.target.classList.remove("sightsee-hover-anime");
+            e.target.previousElementSibling.style.opacity = 0;
+        })
+        ele.addEventListener('click', (e)=>{})
+    }
+
+    let backBtn = doc.querySelector("#backBtn");
+    backBtn.onclick = (e)=>{
+
+        sightseeingPopup.classList.remove("show");
+        main.classList.remove("popup-showing");
+    };
 }
 
 const apiResult = [{
@@ -84,10 +129,6 @@ apiResult.forEach((result, idx) => {
 });
 
 var listItems = Array.from(document.querySelectorAll(".card")); 
-var sortables = listItems.map(Sortable);
-var total = sortables.length;
-TweenLite.to(container, 0.5, { autoAlpha: 1 });
-
 function changeIndex(item, to) {
     // Change position in array
     arrayMove(sortables, item.index, to);
@@ -103,56 +144,6 @@ function changeIndex(item, to) {
     // Set index for each sortable
     sortables.forEach((sortable, index) => sortable.setIndex(index));
   }
-
-    
-    
-    let form = doc.querySelector('.search-form')
-    let sightseeingPopup = doc.querySelector('.sight-popup')
-    let onsubmit = async (value)=>{
-        if(value == undefined || value.trim() === "" || value.trim().length <=2 ){
-            return;
-        }
-        sightseeingPopup.classList.add("show")
-        main.classList.add("popup-showing");
-        
-        const [long, lat] = await getCentLatLong(value.trim());
-        
-        // const points = await getPoints(lat, long);
-        let locations =  getRecommend(lat, long, 500);
-        
-    }
-    form.onsubmit = async (e)=> {
-        e.preventDefault();
-        onsubmit(search.value);
-    }
-
-    goIcon.addEventListener("click", (e)=>{
-        onsubmit(search.value);
-    })
-
-    let sightseeImgs = doc.querySelectorAll(".card .img img")
-    
-    for(let i = 0; i < sightseeImgs.length; i++){
-        let ele = sightseeImgs[i]
-        ele.addEventListener('mouseover', (e)=>{
-            e.target.classList.add("sightsee-hover-anime");
-            e.target.previousElementSibling.style.opacity = 1;
-        })
-        ele.addEventListener('mouseleave', (e)=>{
-            e.target.classList.remove("sightsee-hover-anime");
-            e.target.previousElementSibling.style.opacity = 0;
-        })
-        ele.addEventListener('click', (e)=>{})
-    }
-
-    let backBtn = doc.querySelector("#backBtn");
-    backBtn.onclick = (e)=>{
-
-        sightseeingPopup.classList.remove("show");
-        main.classList.remove("popup-showing");
-    }
-    
-};
 
 // location score
 async function getPoints(latitude, longitude) {
