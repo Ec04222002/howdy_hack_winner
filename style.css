@@ -1,5 +1,6 @@
 :root{
   --main-bg-color: rgba(154,57,163,1);
+  --secondary-color: #CD7B3C;
 }
 
 
@@ -306,7 +307,7 @@ font-weight: 600;
 .slider .card .content .sub-title{
 font-size: 20px;
 font-weight: 600;
-color: #e74c3c;
+color: var(--secondary-color);
 line-height: 20px;
 }
 .card .content p{
@@ -334,6 +335,7 @@ transform: scale(0.9);
 }
 /*timeline*/
 .timeline-popup{
+  display:none;
     position: absolute;
     z-index: 1;
     width: 100vw;
@@ -377,7 +379,7 @@ font-weight: 600;
 #timeline-slider .card .content .sub-title{
 font-size: 20px;
 font-weight: 600;
-color: #e74c3c;
+color: var(--secondary-color);
 line-height: 20px;
 }
 #timeline-slider .card .content p{
@@ -391,7 +393,7 @@ text-align: left;
 margin: 10px 0;
 }
 #timeline-slider .card .content .btn button{
-background: #e74c3c;
+background: var(--secondary-color);
 color: #fff;
 border: none;
 outline: none;
