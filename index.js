@@ -3,12 +3,14 @@ doc = document
 
 
 window.onload = () => {
-    test();
+    // test();
     let searchBox = doc.querySelector(".search-box");
     let search = doc.querySelector('#search');
     let main = doc.getElementsByTagName('main')[0]
+    // let timeLine = doc.querySelector()
     main.addEventListener('click', (e)=>{
         searchBox.classList.remove('border-searching')
+        log("click")
         e.stopPropagation()
     })
         search.addEventListener('click', (e)=>{
@@ -38,6 +40,8 @@ window.onload = () => {
     })
     let form = doc.querySelector('.search-form')
     let sightseeingPopup = doc.querySelector('.sight-popup')
+    let planeImg = doc.querySelector('#corner-plane')
+
     let onsubmit = async (value)=>{
         if(value == undefined || value.trim() === "" || value.trim().length <=2 ){
             return;
@@ -45,10 +49,11 @@ window.onload = () => {
         sightseeingPopup.classList.add("show")
         main.classList.add("popup-showing");
         
-        const [long, lat] = await getCentLatLong(value.trim());
+        // const [long, lat] = await getCentLatLong(value.trim());
         
         // const points = await getPoints(lat, long);
-        let locations =  getRecommend(lat, long, 500);
+        // let locations =  getRecommend(lat, long, 500);
+        planeImg.classList.add("fly-anime")
         
     }
     form.onsubmit = async (e)=> {
@@ -60,8 +65,10 @@ window.onload = () => {
         onsubmit(search.value);
     })
 
-    let sightseeImgs = doc.querySelectorAll(".card .img img")
-    
+    let sightseeImgs = doc.querySelectorAll(".slider > .card .img img")
+    let plane = doc.querySelector("#plane-stream")
+    let card = doc.querySelectorAll("#timeline-slider .card")
+    let timeLinePopup = doc.querySelector(".timeline-popup")
     for(let i = 0; i < sightseeImgs.length; i++){
         let ele = sightseeImgs[i]
         ele.addEventListener('mouseover', (e)=>{
@@ -72,7 +79,40 @@ window.onload = () => {
             e.target.classList.remove("sightsee-hover-anime");
             e.target.previousElementSibling.style.opacity = 0;
         })
-        ele.addEventListener('click', (e)=>{})
+        ele.addEventListener('click', (e)=>{
+            sightseeingPopup.classList.remove("show");
+            timeLinePopup.style.display = "block"
+            plane.classList.add("animated")
+            
+            plane.addEventListener("animationstart", (ev)=>{
+                i = 0;
+                let liftAnime = setInterval(()=>{
+                    card[i].classList.add('animated')
+                    card[i].addEventListener('animationend', (e)=>{
+                        e.target.style.opacity = 1;
+                        e.target.style.pointerEvents = "all";
+                    })
+                    // card[i].style.opacity = 1;
+                    // card[i].style.pointerEvents = "all";
+                    ++i;
+                    if(i == card.length){
+                        clearInterval(liftAnime);
+                    }
+                }, 500);
+            })
+            // for(var i = 0; i < card.length; i++){
+            //     const ele = card[i]
+            //     setTimeout(()=>{
+            //         ele.classList.add("animated")
+                    
+            //     },1200)
+            // }
+            // card.forEach((card)=>{
+            //     card.style.opacity = 1;
+            //     card.style.pointerEvents = "all"
+            // })
+           
+        })
     }
 
     let backBtn = doc.querySelector("#backBtn");
@@ -201,19 +241,19 @@ async function getPlaceDescription(place) {
 // mapping out api result 
 
 const apiResult = [{
-    img: "../HowdyHack2022/assets/capitol.png",
+    img: "../assets/capitol.png",
     title: "title1"
   }, {
-    img: "../HowdyHack2022/assets/capitol.png",
+    img: "../assets/capitol.png",
     title: "title2"
   }, {
-    img: "../HowdyHack2022/assets/capitol.png",
+    img: "../assets/capitol.png",
     title: "title3"
   },{
-    img: "../HowdyHack2022/assets/capitol.png",
+    img: "../assets/capitol.png",
     title: "title4"
   },{
-    img: "../HowdyHack2022/assets/capitol.png",
+    img: "../assets/capitol.png",
     title: "title5"
   }];
 
@@ -227,10 +267,9 @@ const container = document.getElementById('timeline-slider');
 apiResult.forEach((result, idx) => {
     // Create card element
     const card = document.createElement('div');
-    card.classList = 'card-body draggable = "true"';
   
     // Construct card content
-    const content = `
+    let content = `
         <div class="card">
             <div class="left-arrow-icon"><i class="fa fa-chevron-left"></i></div> 
             <div class="right-arrow-icon"><i class="fa fa-chevron-right"></i></div> 
@@ -241,18 +280,11 @@ apiResult.forEach((result, idx) => {
                 <div class="title">
                         ${result.title}
                 </div>
-                <div class="sub-title">
-                    Web Developer
-                </div>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit modi dolorem quis quae animi nihil minus sed unde voluptas cumque.
-                </p>
                 <div class="btn">
-                    <button>Read more</button>
+                    <button>Read Wiki</button>
                 </div>
             </div>
-        </div>
-         `;
+        </div> `;
     container.innerHTML += content;
 });
 

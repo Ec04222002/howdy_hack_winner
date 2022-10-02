@@ -126,6 +126,9 @@ font-size: 1.22em;
  
 }
 
+#corner-plane{
+    transition: all 10s ease-out;
+}
 #corner-plane img{
   transform: rotate(-45deg);
   padding: 0;
@@ -205,8 +208,9 @@ cursor : pointer;
 }
 
 .sight-popup{
+    min-width: 200px;
   position: absolute;
-  z-index: 1;
+  z-index: 200;
   width: 100vw;
   
  opacity: 0;
@@ -219,19 +223,21 @@ cursor : pointer;
 
 .sight-popup > h1{
   min-width: 300px;
+  text-align: center
 }
 .sight-popup.show{
   opacity: 1;
   visibility: visible;
-  z-index: 200;
+  z-index: 10;
   top: 50%;
 }
 
 .slider{
+    /* display: none; */
   margin:auto;
 display: grid;
 width: 90vw;
-min-width: 300px;
+/* min-width: 300px; */
 grid-template-columns: auto auto auto;
 place-items: center;
 column-gap: 10px;
@@ -260,9 +266,15 @@ background-color: var(--main-bg-color);
   opacity: 0;
   position: absolute;
   border-radius: 10px;
-  padding: 6px;
+  padding: 8px;
   background-color: var(--main-bg-color);
   color: #fff;
+  /* transition: all 2s ease-in-out; */
+}
+
+.slider .card .img button:hover{
+    width: 50px;
+
 }
 
 
@@ -296,7 +308,7 @@ object-fit: cover;
 }
 .slider .card .content{
   text-align: center;
-
+  /* height: 10%; */
 }
 .slider .card .content .title{
 color:#fff;
@@ -320,11 +332,11 @@ text-align: left;
 margin: 10px 0;
 } */
 .card .content .btn button{
-background: transparent;
+background: var(--main-bg-color);
 color: #fff;
 border: none;
 outline: none;
-font-size: 35px;
+font-size: 20px;
 border-radius: 5px;
 cursor: pointer;
 transition: 0.2s;
@@ -334,15 +346,17 @@ transform: scale(0.9);
 }
 /*timeline*/
 .timeline-popup{
+    display:none;
     position: absolute;
     z-index: 1;
     width: 100vw;
-    outline: solid green;
-    top: 50%;
+
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 #timeline-slider{
+/* display: none; */
 display: grid;
 grid-auto-flow: column;
 grid-auto-columns: 20%;
@@ -352,32 +366,103 @@ overflow-x: auto;
    display: none;
 }
 #timeline-slider .card{
+border-radius: 25px;
+height: 280px;
   position: relative;
-width: 19vw;
-margin: 0 10px;
-background: #fff;
+  opacity: 0;
+  pointer-events: none;
+width: 18vw;
+margin: 0 15px;
+background: transparent;
+
 }
+
+#timeline-slider .card.animated{
+    animation: lift 2s ease-in-out 0.5s;
+    
+}
+#plane-path{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    top: 55%;
+    transform: translateY(-50%);
+}
+
+#plane-stream{
+    background-color: #fff;
+    width:0;
+    height: 13px;
+}
+#plane-stream.animated{
+    animation: stream 3.5s ease-in-out;
+    width:calc(100vw - 30px);
+}
+#plane-path > i{
+    font-size: 40px;
+    margin-left: -2px;
+}
+
+  
+@keyframes stream {
+    0% {
+      width: 0%;
+    }
+    10%{
+        width: calc((100vw - 30px) * 0.1)
+    }
+    100% {
+        width:calc(100vw - 30px);
+    }
+  }
+
+  @keyframes lift{
+    0%{
+        
+        top:100px;
+
+    }
+    10%{
+  
+        top: 90px;
+    }
+    100%{opacity: 1;
+    top:0px;}
+  }
+/* @keyframes planeMove{
+    0%{
+        transform: translateX(0);
+    }
+    100%{
+        transform: translateX();
+    }
+} */
 #timeline-slider .card .img{
-height: 19vw;
+height: 85%;
 width: 100%;
 }
 #timeline-slider .card .img img{
+border-radius: 25px;
 height: 100%;
 width: 100%;
 object-fit: cover;
+/* outline: #fff 5px solid;
+animation: borderAnime 3s linear 0.2s; */
+
 }
 #timeline-slider .card .content{
-padding: 10px 20px;
+padding: 10px 10px;
 }
 #timeline-slider .card .content .title{
-color:black;
-font-size: 25px;
+color:#fff;
+font-size: 22px;
 font-weight: 600;
+text-align: center;
 }
 #timeline-slider .card .content .sub-title{
 font-size: 20px;
 font-weight: 600;
-color: #e74c3c;
+color: var(--main-bg-color);
 line-height: 20px;
 }
 #timeline-slider .card .content p{
@@ -386,29 +471,36 @@ text-align: justify;
 margin: 10px 0;
 }
 #timeline-slider .card .content .btn{
-display: block;
 text-align: left;
-margin: 10px 0;
+/* margin: 10px 0; */
+position: absolute;
+ left: 50%;
+top: 50%;
+transform: translate(-50%, -50%)
+
 }
 #timeline-slider .card .content .btn button{
-background: #e74c3c;
+/* background: var(--main-bg-color); */
 color: #fff;
 border: none;
 outline: none;
-font-size: 17px;
-padding: 5px 8px;
-border-radius: 5px;
+font-size: 15px;
+padding: 10px;
+/* border-radius: 3px 5px; */
 cursor: pointer;
 transition: 0.2s;
 }
-#timeline-slider .card .content .btn button:hover{
+/* #timeline-slider .card .content .btn button:hover{
 transform: scale(0.9);
-}
+} */
 .left-arrow-icon{
   position: absolute;
   top: 5px;
   left: 10px;
 }
+
+
+
 .right-arrow-icon{
   position: absolute;
   top: 5px;
