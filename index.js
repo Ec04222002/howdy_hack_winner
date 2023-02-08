@@ -8,24 +8,24 @@ window.onload = () => {
     let search = doc.querySelector('#search');
     let main = doc.getElementsByTagName('main')[0]
     // let timeLine = doc.querySelector()
-    main.addEventListener('click', (e)=>{
+    main.addEventListener('click', (e) => {
         searchBox.classList.remove('border-searching')
         e.stopPropagation()
     })
-        search.addEventListener('click', (e)=>{
+    search.addEventListener('click', (e) => {
         searchBox.classList.add('border-searching')
         e.stopPropagation()
     })
-  
-    
-    search.addEventListener('click', (e)=>{
+
+
+    search.addEventListener('click', (e) => {
         searchBox.classList.add('border-searching')
         e.stopPropagation()
     })
 
     let readMoreBtns = doc.querySelectorAll("#wikiBtn")
-    readMoreBtns.forEach((btn)=>{
-        btn.addEventListener('click', (e)=>{
+    readMoreBtns.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
             const wikiPage = getPlaceDescription(e.target.parentElement.parentElement.querySelector(".title").innerText);
             e.stopPropagation();
             e.target.style.opacity = 0;
@@ -34,11 +34,11 @@ window.onload = () => {
         })
     });
     let goIcon = doc.querySelector('.go-icon')
-    searchBox.addEventListener('keyup', (e)=>{
-        if(e.target.value.trim().length > 0){
+    searchBox.addEventListener('keyup', (e) => {
+        if (e.target.value.trim().length > 0) {
             goIcon.classList.add("go-in")
         }
-        else{
+        else {
             goIcon.classList.remove('go-in')
         }
     })
@@ -46,29 +46,29 @@ window.onload = () => {
     let sightseeingPopup = doc.querySelector('.sight-popup')
     let planeImg = doc.querySelector('#corner-plane')
 
-    let onsubmit = async (value)=>{
-        if(value == undefined || value.trim() === "" || value.trim().length <=2 ){
+    let onsubmit = async (value) => {
+        if (value == undefined || value.trim() === "" || value.trim().length <= 2) {
             return;
         }
-        
+
         await initialSearch(value);
         sightseeingPopup.classList.add("show")
         main.classList.add("popup-showing");
         planeImg.classList.add("fly-anime")
-        
+
         // const [long, lat] = await getCentLatLong(value.trim());
-        
+
         // const points = await getPoints(lat, long);
         // let locations =  getRecommend(lat, long, 500);
-        
-        
+
+
     }
-    form.onsubmit = async (e)=> {
+    form.onsubmit = async (e) => {
         e.preventDefault();
         onsubmit(search.value);
     }
 
-    goIcon.addEventListener("click", (e)=>{
+    goIcon.addEventListener("click", (e) => {
         onsubmit(search.value);
     })
 
@@ -76,18 +76,18 @@ window.onload = () => {
     // let plane = doc.querySelector("#plane-stream")
 
     let timeLinePopup = doc.querySelector(".timeline-popup")
-    for(let i = 0; i < sightseeImgs.length; i++){
+    for (let i = 0; i < sightseeImgs.length; i++) {
         let ele = sightseeImgs[i]
-        ele.addEventListener('mouseover', (e)=>{
+        ele.addEventListener('mouseover', (e) => {
             e.target.classList.add("sightsee-hover-anime");
             e.target.previousElementSibling.style.opacity = 1;
         })
-        ele.addEventListener('mouseout', (e)=>{
-            if(e.relatedTarget.id == "wikiBtn") return;
+        ele.addEventListener('mouseout', (e) => {
+            if (e.relatedTarget.id == "wikiBtn") return;
             e.target.classList.remove("sightsee-hover-anime");
             e.target.previousElementSibling.style.opacity = 0;
         })
-        ele.addEventListener('click', async (e)=>{
+        ele.addEventListener('click', async (e) => {
             let lat = e.target.getAttribute("data-lat")
             let long = e.target.getAttribute("data-long")
             let name = e.target.getAttribute("data-title")
@@ -95,11 +95,11 @@ window.onload = () => {
             let rating = e.target.getAttribute("data-rating")
             let distance = e.target.getAttribute("data-distance")
             apiResultTimeline.push({
-                'name':name,
-                'coordinates':lat,
-                'image_url':image,
-                'rating':rating,
-                'distance':distance
+                'name': name,
+                'coordinates': lat,
+                'image_url': image,
+                'rating': rating,
+                'distance': distance
             });
             // console.log("apiresulttimeline",apiResultTimeline);
             sightseeingPopup.classList.remove("show");
@@ -109,18 +109,18 @@ window.onload = () => {
             plane = doc.querySelector("#plane-stream")
             let cards = doc.querySelectorAll("#timeline-slider .card")
             timeLinePopup.style.display = "block"
-            plane.addEventListener("animationstart", (ev)=>{
+            plane.addEventListener("animationstart", (ev) => {
                 i = 0;
-                let liftAnime = setInterval(()=>{
+                let liftAnime = setInterval(() => {
                     cards[i].classList.add('animated')
-                    cards[i].addEventListener('animationend', (e)=>{
+                    cards[i].addEventListener('animationend', (e) => {
                         e.target.style.opacity = 1;
                         e.target.style.pointerEvents = "all";
                     })
                     // card[i].style.opacity = 1;
                     // card[i].style.pointerEvents = "all";
                     ++i;
-                    if(i == cards.length){
+                    if (i == cards.length) {
                         clearInterval(liftAnime);
                     }
                 }, 550);
@@ -129,19 +129,19 @@ window.onload = () => {
             //     const ele = card[i]
             //     setTimeout(()=>{
             //         ele.classList.add("animated")
-                    
+
             //     },1200)
             // }
             // card.forEach((card)=>{
             //     card.style.opacity = 1;
             //     card.style.pointerEvents = "all"
             // })
-           
+
         }, true)
     }
 
     let backBtn = doc.querySelector("#backBtn");
-    backBtn.onclick = (e)=>{
+    backBtn.onclick = (e) => {
 
         sightseeingPopup.classList.remove("show");
         main.classList.remove("popup-showing");
@@ -149,93 +149,94 @@ window.onload = () => {
 }
 // ---------------------------API-------------------------------------
 // sorts based on closeness
-function compareDistance( a, b ) {
-    if ( a.distance < b.distance ){
-      return 1;
+function compareDistance(a, b) {
+    if (a.distance < b.distance) {
+        return 1;
     }
-    if ( a.distance > b.distance ){
-      return -1;
+    if (a.distance > b.distance) {
+        return -1;
     }
     return 0;
-  }
+}
 
-  //sorts based on rating
-function compare( a, b ) {
-    if ( a.rating < b.rating ){
-      return 1;
+//sorts based on rating
+function compare(a, b) {
+    if (a.rating < b.rating) {
+        return 1;
     }
-    if ( a.rating > b.rating ){
-      return -1;
+    if (a.rating > b.rating) {
+        return -1;
     }
     return 0;
-  }
+}
 //gets coordinates for city
-async function getCentLatLong(city){
+async function getCentLatLong(city) {
     let response = null
     const token = "pk.eyJ1IjoiY2gwMTEwZW4iLCJhIjoiY2w4cW1kdjI0MGNiMzNubWJnaXRieWJjbSJ9.KoS-o2b14qHproaOgMudTQ"
-    const url = 
-    `https://api.mapbox.com/geocoding/v5/mapbox.places/${city}.json?proximity=ip&types=place%2Cpostcode%2Caddress&access_token=${token}`
+    const url =
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${city}.json?proximity=ip&types=place%2Cpostcode%2Caddress&access_token=${token}`
     response = await fetch(url)
     json = await response.json()
     return json['features'][0]['center'];
 }
 
 //searches initial 12 main attractions
-async function locationSearch (search, lat, long, rad) {
+async function locationSearch(search, lat, long, rad) {
     await axios.post('http://localhost:3001/initial-list', {
-      search: search,
-      longitude: long,
-      latitude: lat,
-      radius: rad
+        search: search,
+        longitude: long,
+        latitude: lat,
+        radius: rad
     }).then(function (response) {
-      for(let i=0; i<Math.min(response.data.total - 1, 12);i++){
-        apiResult[i] = {
-            'name':response.data.businesses[i].name,
-            'coordinates':response.data.businesses[i].coordinates,
-            'image_url':response.data.businesses[i].image_url,
-            'rating':response.data.businesses[i].rating,
-            'distance':response.data.businesses[i].distance
-        };
-    }
+        for (let i = 0; i < Math.min(response.data.total - 1, 12); i++) {
+            apiResult[i] = {
+                'name': response.data.businesses[i].name,
+                'coordinates': response.data.businesses[i].coordinates,
+                'image_url': response.data.businesses[i].image_url,
+                'rating': response.data.businesses[i].rating,
+                'distance': response.data.businesses[i].distance
+            };
+        }
     })
-    .catch(function (error) {
-      console.log(error);
-    });    
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
-async function locationSearchTimeline (search, lat, long) {
+
+async function locationSearchTimeline(search, lat, long) {
     let rad = 500;
     await axios.post('http://localhost:3001/initial-list', {
-      search: search,
-      longitude: long,
-      latitude: lat,
-      radius: rad
+        search: search,
+        longitude: long,
+        latitude: lat,
+        radius: rad
     }).then(function (response) {
         let output = sortByDistance(response.data.businesses);
-        if(output.length == 0) return;
+        if (output.length == 0) return;
         apiResultTimeline.push({
-            'name':output[1].name,
-            'coordinates':output[1].coordinates,
-            'image_url':output[1].image_url,
-            'rating':output[1].rating
+            'name': output[1].name,
+            'coordinates': output[1].coordinates,
+            'image_url': output[1].image_url,
+            'rating': output[1].rating
         });
         console.log("------------------------------iteration---", apiResultTimeline)
     })
-    .catch(function (error) {
-      console.log(error);
-    });
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 //sort by distance
-function sortByDistance(array){
-    array.sort( compareDistance );
+function sortByDistance(array) {
+    array.sort(compareDistance);
     return array;
 }
 
 //gets first 12
-async function initialSearch (city){
+async function initialSearch(city) {
     const [long, lat] = await getCentLatLong(city.trim());
     await locationSearch("attractions", lat, long, 500);
-    apiResult.sort( compare );
+    apiResult.sort(compare);
     setInitAttractions();
 }
 
@@ -247,16 +248,16 @@ function getPlaceDescription(place) {
 
 let apiResult = [];
 
-async function getTimeline(lat, long){
+async function getTimeline(lat, long) {
     await locationSearchTimeline("brunch", lat, long)
     await locationSearchTimeline("activity", lat, long)
     await locationSearchTimeline("dinner", lat, long)
     await locationSearchTimeline("nightlife", lat, long)
     afterApiResultTimeline();
 }
-function setInitAttractions(){
+function setInitAttractions() {
     let cards = doc.querySelectorAll('.slider > .card');
-    cards.forEach((card, idx)=>{
+    cards.forEach((card, idx) => {
         let img = card.querySelector(".img img");
         let title = card.querySelector(".content > .title")
         img.src = apiResult[idx].image_url;
@@ -276,17 +277,17 @@ function setInitAttractions(){
     })
 }
 let apiResultTimeline = [];
-function afterApiResultTimeline(){
+function afterApiResultTimeline() {
     let container = document.getElementById('timeline-slider');
-        apiResultTimeline.forEach((result, idx) => {
-            // Create card element
-            log(`https://www.google.com/maps/place/${result.coordinates.latitude}N+${result.coordinates.longitude}E`)
-            const card = document.createElement('div');
-            card.classList = 'card-body';
-            // Construct card content
-            let content = `
+    apiResultTimeline.forEach((result, idx) => {
+        // Create card element
+        log(`https://www.google.com/maps/place/${result.coordinates.latitude}N+${result.coordinates.longitude}E`)
+        const card = document.createElement('div');
+        card.classList = 'card-body';
+        // Construct card content
+        let content = `
             <div class="card">
-            <a target="_blank" rel="noopener noreferrer"  href = 'https://www.google.com/maps/dir/${result.name.replace(/'/g,"")}'>
+            <a target="_blank" rel="noopener noreferrer"  href = 'https://www.google.com/maps/dir/${result.name.replace(/'/g, "")}'>
             <div class="left-arrow-icon"><i class="fa fa-globe fa-lg"></i></div> 
             </a>
             <div class="right-arrow-icon"><i class="fa fa-refresh fa-lg"></i></div>
@@ -303,32 +304,32 @@ function afterApiResultTimeline(){
                 </div>
             </div> `;
 
-            container.innerHTML += content;
+        container.innerHTML += content;
 
 
-            
 
-            
-            
+
+
+
 
     });
 
 
-    doc.querySelectorAll('#timeline-slider > .card > .img').forEach((ele)=>{
+    doc.querySelectorAll('#timeline-slider > .card > .img').forEach((ele) => {
         // let wikiBtn= ele.parentElement.querySelector(".content > .btn");
         // wikiBtn.onclick = (e)=>{
-            
+
         // }
-        ele.addEventListener('mouseover', (e)=>{
+        ele.addEventListener('mouseover', (e) => {
             e.target.classList.add("sightsee-hover-anime");
             e.target.parentElement.parentElement.querySelector(".content > .btn").style.opacity = 1;
             e.target.parentElement.parentElement.querySelector(".left-arrow-icon").style.opacity = 1;
             e.target.parentElement.parentElement.querySelector(".right-arrow-icon").style.opacity = 1;
         })
-        ele.addEventListener('mouseout', (e)=>{
+        ele.addEventListener('mouseout', (e) => {
             let s = e.relatedTarget.id;
             let i = e.relatedTarget.className;
-            if(e.relatedTarget != null && (s == "openWikiBtn" || i == 'left-arrow-icon' || i == 'right-arrow-icon' || i == "fa fa-globe fa-lg" || i == "fa fa-refresh fa-lg")) return;
+            if (e.relatedTarget != null && (s == "openWikiBtn" || i == 'left-arrow-icon' || i == 'right-arrow-icon' || i == "fa fa-globe fa-lg" || i == "fa fa-refresh fa-lg")) return;
             e.target.classList.remove("sightsee-hover-anime");
             e.target.parentElement.parentElement.querySelector(".content > .btn").style.opacity = 0;
             e.target.parentElement.parentElement.querySelector(".left-arrow-icon").style.opacity = 0;
